@@ -1,0 +1,54 @@
+# Importing necessary libraries
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+from time import sleep
+from random import randint
+
+# Defining variables
+headers = {"Accept-Language" : "en-US,en;q=0.5"}
+
+movie_title = []
+user_rating = []
+review_title = []
+user_name = []
+movie_review = []
+
+# Scraping data
+movie_id = ['tt4911656', 'tt1288645', 'tt0441641', 'tt0946998']
+
+for urls in movie_id:
+    urls = requests.get('https://www.imdb.com/title/'+str(urls)+'/reviews')
+    soup = BeautifulSoup(urls.text, 'html.parser')
+
+    review_data = soup.findAll('div', attrs= {'class': 'review-container'})
+    movie_data = soup.findAll('div', attrs= {'class': 'subpage_title_block'})
+    
+    for push in movie_data:
+
+        movietitle = push.h3.a.text
+        movie_title.append(movietitle)
+        
+    for store in review_data:
+    
+        rating = store.find('span', class_ = 'rating-other-user-rating').span.text
+        user_rating.append(rating)
+
+        title = store.find('a', class_ = 'title').text.lstrip().replace('\n', '')
+        review_title.append(title)
+
+        username = store.find('span', class_ = 'display-name-link').a.text
+        user_name.append(username)
+
+        review = store.find('div', class_ = 'text show-more__control').text
+        movie_review.append(review)
+        
+# Visualize data with pandas
+movie_DF = pd.DataFrame({'User Rating': user_rating, 'Review Title': review_title, 'Username': user_name, 'Review': movie_review})
+movie_DF
+
+# Save data into excel file
+movie_DF.to_excel('JokoAnwarReview.xlsx')
+
+# Save data into csv file
+movie_DF.to_csv('JokoAnwarReview.csv')
