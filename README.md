@@ -1,4 +1,7 @@
 # IMDb-Reviews-Multiple-Web-Scrape
 How to Scrape Reviews from IMDb using multiple urls.
 <br/>
-**Note:** This will only work if every url have same html sturcture
+<br/>
+**--------------- PAY ATTENTION ---------------**
+<br/>
+This will only work if every url have same html sturcture, such as same class names, same id names etc.
